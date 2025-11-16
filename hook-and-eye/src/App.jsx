@@ -7,7 +7,6 @@ import Home from './pages/Home'
 import CreatePost from './pages/CreatePost'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   let element= useRoutes([
     {
