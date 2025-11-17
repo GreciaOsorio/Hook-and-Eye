@@ -7,13 +7,15 @@ import { UserAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router';
 import { Button } from '@material-tailwind/react';
 
-const Home = (props) => {
+const Home = ({ searchQuery }) => {
     const [postCard, setPostCard] = useState([])
-    const { session, signOut } = UserAuth();
+    const { session } = UserAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [sortByLatest, setSortByLatest] = useState(false);
     const [sortByLikes, setSortByLikes] = useState(false);
+    const [allPosts, setAllPosts] = useState([]);
+
 
     console.log(session)
 
@@ -26,6 +28,7 @@ const Home = (props) => {
                     .select()
                     .order('id', {ascending: true})
                 
+                setAllPosts(data)
                 setPostCard(data) 
             }catch(error){
                 console.error(error)
@@ -36,17 +39,18 @@ const Home = (props) => {
 
         fetchPost().catch(console.eror)
          
-    }, [props])
-    
-    const handleSignOut = async(event) => {
-        event.preventDefault()
-        try{
-            await signOut();
-            navigate('/')
-        }catch(error){
-            console.error(error)
+    }, [])
+
+    useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setPostCard(allPosts);
+        }else{
+            const filtered = allPosts.filter( post => 
+                post.title?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setPostCard(filtered);
         }
-    }
+    }, [searchQuery, allPosts])
 
     const filterByCreationTime = async() => {
         setLoading(true);
@@ -57,7 +61,8 @@ const Home = (props) => {
                 ? await query
                 : await query.order('created_at', {ascending: false});
 
-            setPostCard(data)
+            setAllPosts(data);
+            setPostCard(data);
             setSortByLatest(!sortByLatest);
          }catch(err){
             console.error(err)

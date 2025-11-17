@@ -12,11 +12,12 @@ import SignUp from './pages/SignUp'
 import PrivateRoute from './components/PrivateRoute.jsx'
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState(" ");
 
   let element= useRoutes([
     {
       path: "/",
-      element: <Home />
+      element: <Home searchQuery={searchQuery}/>
     },
     {
       path: "/newPost",
@@ -55,7 +56,7 @@ function App() {
   return (
     <>
       <div>
-        <NavBar  />
+        <NavBar  onSearch={setSearchQuery}/>
         { element }
 
       </div>
