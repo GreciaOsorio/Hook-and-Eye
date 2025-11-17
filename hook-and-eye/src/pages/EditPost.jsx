@@ -1,19 +1,45 @@
-import "/src/App.css"
-import { useState } from 'react'
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { supabase } from '../client'
 import { Link } from "react-router";
-import { Input, Button } from "@material-tailwind/react";
+import { 
+    Typography,
+    Input,
+    Button
+} from "@material-tailwind/react";
 
-const CreatePost = () => {
+const EditPost = () => {
+    const { id } = useParams();
     const [post, setPost] = useState({
+        id: null,
         title: "",
         content: "",
-        file: "",
-        url: "",
+        file:"",
+        url:"",
     })
     const [fileName, setFileName] = useState('');
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchPost = async() => {
+            const {data} = await supabase
+                .from('Posts')
+                .select()
+                .eq('id', id)
+                .single()
+
+            setPost ({
+                id: data.id,
+                title: data.title,
+                content: data.content,
+                file: data.file,
+                url: data.url,
+            });
+        }
+
+        fetchPost().catch(console.error)
+    }, [id])
 
     const handleChange = (event) => {
         const { name, value, files } = event.target
@@ -34,15 +60,15 @@ const CreatePost = () => {
         }
     }
 
-    const createPost = async(event) => {
+    const updatePost = async(event) => {
         event.preventDefault()
         setError('');
         setUploading(true);
-        
-        let fileUrl = "";
+
+        let fileUrl = post.file;
         
         // Upload file to Supabase Storage if a file was selected
-        if (post.file) {
+        if (post.file && post.file instanceof File) {
             const fileExt = post.file.name.split('.').pop();
             const fileName = `${Math.random()}.${fileExt}`;
             const { data, error } = await supabase.storage
@@ -58,28 +84,27 @@ const CreatePost = () => {
             
             if (data) {
                 const { data: urlData } = supabase.storage
-                    .from('post_files')  
+                    .from('post_files') 
                     .getPublicUrl(data.path);
                 fileUrl = urlData.publicUrl;
             }
         }
-        
-        
-        const { error: insertError } = await supabase
+
+        const { error: updateError } = await supabase
             .from('Posts')
-            .insert({
+            .update({
                 title: post.title, 
                 content: post.content, 
-                file: fileUrl || post.url,  // Fixed: use fileUrl if uploaded, otherwise use URL input
-                url: post.url  // Keep original URL field
+                file: fileUrl,
+                url: post.url  
             })
-            .select();
+            .eq('id',id);
 
-        if (insertError) {
-            console.error('Error creating post:', insertError);
-            setError(`Failed to create post: ${insertError.message}`);
-            setUploading(false);
-            return;
+            if (updateError) {
+                console.error('Error updating post:', updateError);
+                setError(`Failed to create post: ${updateError.message}`);
+                setUploading(false);
+                return;
         }
 
         window.location = "/"
@@ -91,21 +116,8 @@ const CreatePost = () => {
                 <form aria-label="Create new post">
                     <div className="relative flex flex-col bg-white shadow-sm border border-slate-200 rounded-lg w-full">
                         <div className=" p-6 mb-8">
-                            <Link to="/">
-                                <svg 
-                                    xmlns="http://www.w3.org/2000/svg" 
-                                    fill="none" 
-                                    viewBox="0 0 24 24" 
-                                    strokeWidth={1.5} 
-                                    stroke="currentColor" 
-                                    className="size-6 flex justify-start mb-4"
-                                    >
-                                        <title>Go back</title>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                                </svg>
-                            </Link>
                             <h5 className="mb-6 text-slate-800 text-xl font-semibold">
-                                What wisdom will you share today?
+                                Edit Your Post?
                             </h5>
                             
                             {error && (
@@ -118,7 +130,8 @@ const CreatePost = () => {
                                 <Input 
                                     name="title"
                                     label="Post Title..." 
-                                    onChange={handleChange}    
+                                    onChange={handleChange}
+                                    value={post.title}    
                                 />
                             </div>
                             <div className="w-full flex mt-6">
@@ -128,6 +141,7 @@ const CreatePost = () => {
                                     placeholder=" "
                                     name="content"
                                     onChange={handleChange} 
+                                    value={post.content}
                                     >
                                     </textarea>
                                     <label
@@ -185,17 +199,18 @@ const CreatePost = () => {
                     <div className="mt-6 flex justify-center">
                         <Button 
                             type="submit" 
-                            onClick={createPost} 
+                            onClick={updatePost} 
                             className="w-full sm:w-auto px-8"
                             disabled={uploading}
                         >
-                            {uploading ? 'Creating...' : 'Create'}
+                            {uploading ? 'Updating...' : 'Update'}
                         </Button> 
                     </div>
                 </form>
             </div>
         </div>
     )
+
 }
 
-export default CreatePost;
+export default EditPost;

@@ -5,6 +5,9 @@ import './App.css'
 import NavBar from './components/NavBar'
 import Home from './pages/Home'
 import CreatePost from './pages/CreatePost'
+import PostDetails from './pages/PostDetails'
+import EditPost from './pages/EditPost'
+import NotFound from './pages/NotFound'
 
 function App() {
 
@@ -17,6 +20,18 @@ function App() {
       path: "/newPost",
       element: <CreatePost />
     },
+    {
+      path: "/postDetails/:id",
+      element: <PostDetails />
+    },
+    {
+      path: "/postDetails/:id/edit/:id",
+      element: <EditPost />
+    },
+    {
+      path: "*",
+      element: <NotFound />
+    }
   ])
 
   return (

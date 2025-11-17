@@ -7,15 +7,16 @@ import {
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../client";
+import { formatDistanceToNow, format } from 'date-fns';
  
 export function SimpleCard(props) {
-  const [likes, setLikes] = useState(props.likes || 0);
+  const [likes, setLikes] = useState(props.likes);
   const [isLiked, setIsLiked] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
 
   useEffect(() => {
-    setLikes(props.like || 0);
+    setLikes(props.likes || 0);
   }, [props.likes])
 
   const updateLike = async(event) => {
@@ -52,13 +53,16 @@ export function SimpleCard(props) {
 
 
   return (
-    <Card className="flex p-3 mt-6 mb-6 w-full">
-      <CardBody>
-        <Typography variant="h5" color="blue-gray" className="mb-2">
+    <Card className="flex text-left p-3 mt-6 mb-6 w-full">
+      <CardBody className="p-4">
+        <Typography variant="small" className="font-light mb-2 ">
+          Posted {formatDistanceToNow(new Date(props.created_at), { addSuffix: true })} • {format(new Date(props.created_at), 'MM/dd/yy')} at {format(new Date(props.created_at), 'HH:mm')}
+        </Typography>
+        <Typography variant="h4" color="blue-gray" className="mb-2">
           {props.title}
         </Typography>
       </CardBody>
-      <CardFooter className="pt-0">
+      <CardFooter className="pt-0 pb-1 pl-1">
         <Button variant="text" 
                 className=" flex flex-row cursor-pointer items-center"
                 onClick={updateLike}

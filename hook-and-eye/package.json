@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@lottiefiles/dotlottie-react": "^0.17.7",
     "@material-tailwind/html": "^3.0.0-beta.7",
     "@material-tailwind/react": "^2.1.10",
     "@supabase/supabase-js": "^2.81.1",
+    "date-fns": "^4.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router": "^7.9.6",
