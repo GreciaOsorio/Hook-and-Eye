@@ -2,9 +2,12 @@ import { useState } from 'react'
 import { supabase } from '../client'
 import { Link } from "react-router";
 import { Input, Button } from "@material-tailwind/react";
+import { UserAuth } from '../context/AuthContext';
 
 const CreatePost = () => {
     const [post, setPost] = useState({
+        user_id:"",
+        creator: "",
         title: "",
         content: "",
         file: "",
@@ -13,6 +16,9 @@ const CreatePost = () => {
     const [fileName, setFileName] = useState('');
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
+    const { session } = UserAuth();
+    const user_id = session?.user?.id
+    const display_name = session?.user?.user_metadata?.display_name
 
     const handleChange = (event) => {
         const { name, value, files } = event.target
@@ -67,6 +73,8 @@ const CreatePost = () => {
         const { error: insertError } = await supabase
             .from('Posts')
             .insert({
+                user_id: user_id,
+                creator: display_name,
                 title: post.title, 
                 content: post.content, 
                 file: fileUrl || post.url,  // Fixed: use fileUrl if uploaded, otherwise use URL input

@@ -7,7 +7,7 @@ import { supabase } from "../client";
 import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-    const [displayName, setDisplayName] = useState("");
+    const [display_name, setDisplayName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -27,13 +27,34 @@ const SignUp = () => {
 
     const handleSingUp = async(event) => {
         event.preventDefault()
+        
+        // Validate display_name
+        if (!display_name.trim()) {
+            setError("Display name is required");
+            return;
+        }
+        
         setLoading(true)
+        setError(""); // Clear previous errors
+        
         try{
-            const result = await signUpNewUser( email, password)
+            const result = await signUpNewUser(email, password, display_name.trim())
 
             console.log('Sign Up result:', result)
+            
+            if (!result.success) {
+                // Check for specific error messages
+                if (result.error.message.includes('Display name already exists')) {
+                    setError("This display name is already taken. Please choose another.");
+                } else if (result.error.message.includes('display_name is required')) {
+                    setError("Display name is required.");
+                } else {
+                    setError(result.error.message || "An error occurred during sign up");
+                }
+            }
         }catch(error){
-            setError("An error occur");
+            setError("An unexpected error occurred");
+            console.error(error);
         }finally{
             setLoading(false);
         }
@@ -54,7 +75,7 @@ const SignUp = () => {
                     <div className="mb-1 flex flex-col gap-6">
                     <div className="w-full max-w-sm min-w-[200px]">
                         <label className="block mb-2 text-sm text-slate-600 "> 
-                        Your Name
+                        User Name
                         </label>
                         <input onChange={(e) => setDisplayName(e.target.value)} type="text" className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Your Name" />
                     </div>

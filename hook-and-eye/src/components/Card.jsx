@@ -56,6 +56,9 @@ export function SimpleCard(props) {
     <Card className="flex text-left p-3 mt-6 mb-6 w-full">
       <CardBody className="p-4">
         <Typography variant="small" className="font-light mb-2 ">
+          Creator: {props.creator}
+        </Typography>
+        <Typography variant="small" className="font-light mb-2 ">
           Posted {formatDistanceToNow(new Date(props.created_at), { addSuffix: true })} • {format(new Date(props.created_at), 'MM/dd/yy')} at {format(new Date(props.created_at), 'HH:mm')}
         </Typography>
         <Typography variant="h4" color="blue-gray" className="mb-2">
