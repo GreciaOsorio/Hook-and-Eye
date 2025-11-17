@@ -1,38 +1,50 @@
-import '/src/App.css'
 import Card from '/src/components/Card.jsx'
 import { useState, useEffect } from 'react'
 import { supabase } from '../client'
 import { Link } from 'react-router'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { UserAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router';
 
 const Home = (props) => {
     const [postCard, setPostCard] = useState([])
-    
+    const { session, signOut } = UserAuth();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+
+    console.log(session)
 
     useEffect(() => {
         const fetchPost = async() => {
-            const {data} = await supabase
-                .from('Posts')
-                .select()
-                .order('created_at', { ascending: false })
-            
-            setPostCard(data)
-
+            setLoading(true);
+            try{
+                const {data} = await supabase
+                    .from('Posts')
+                    .select()
+                    .order('created_at', { ascending: false })
+                
+                setPostCard(data) 
+            }catch(error){
+                console.error(error)
+            }finally{
+                setLoading(false);
+            }
         }
 
         fetchPost().catch(console.eror)
          
     }, [props])
-
-    // Set loading state to true initially
-    const [loading, setLoading] = useState(true);
-
-    // Page will load after 2 seconds
-    setTimeout(() => {
-        setLoading((loading) => !loading);
-    }, 2000);  
-
-   
+    
+    const handleSignOut = async(event) => {
+        event.preventDefault()
+        try{
+            await signOut();
+            navigate('/')
+        }catch(error){
+            console.error(error)
+        }
+    }
+  
     if(loading) {
         return(
             <div className='flex items-center justify-center min-h-screen '>
@@ -49,6 +61,8 @@ const Home = (props) => {
         return (
             <div className="whole-page p-4 pt-20 ">
                 <div className="text-4xl font-bold">
+                    Welcome, {session?.user?.email}
+                    <p className="cursor-pointer" onClick={handleSignOut}>Sign Out</p>
                 <div className='post-cards'>
                         {
                             postCard && postCard.length > 0 ?

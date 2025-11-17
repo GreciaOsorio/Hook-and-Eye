@@ -213,11 +213,17 @@ const PostDetails = () => {
                     <Typography variant="paragraph">
                         {post.content}
                     </Typography>
-                    <img 
+                    {post.file || post.url ? (
+                        <img 
                         src={post.file ? post.file : post.url} 
                         alt="post-image"
                         className="h-full w-full object-contain"
-                    />
+                        />
+                    ):
+                    (
+                        <div></div>
+                    )}
+                    
                 </CardBody>
                 <CardFooter className="pt-0 pb-1 pl-1">
                     <Button variant="text" 

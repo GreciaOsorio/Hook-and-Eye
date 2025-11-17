@@ -1,4 +1,3 @@
-import "/src/App.css"
 import { useState } from 'react'
 import { supabase } from '../client'
 import { Link } from "react-router";

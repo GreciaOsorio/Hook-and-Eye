@@ -10,11 +10,13 @@ import {
 
 import longLogo from '/src/assets/long-logo.png';
 import { Link } from "react-router-dom";
+import { UserAuth } from "../context/AuthContext";
 
 
 
 export function NavBar() {
   const [openNav, setOpenNav] = React.useState(false);
+  const { session, signOut} = UserAuth();
  
   React.useEffect(() => {
     window.addEventListener(
@@ -22,6 +24,16 @@ export function NavBar() {
       () => window.innerWidth >= 960 && setOpenNav(false),
     );
   }, []);
+
+  const handleSignOut = async(event) => {
+      event.preventDefault()
+      try{
+          await signOut();
+          navigate('/')
+      }catch(error){
+          console.error(error)
+      }
+  }
  
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -29,7 +41,7 @@ export function NavBar() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="flex items-center gap-x-2 p-1 font-medium"
+        className="flex items-center gap-x-1 p-1 font-medium"
       >
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
@@ -41,7 +53,7 @@ export function NavBar() {
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
         </svg>
-        <Link to="/newPost" className="flex items-center">
+        <Link to="/newPost" className="flex items-center ">
             New Post
         </Link>
       </Typography>
@@ -52,7 +64,7 @@ export function NavBar() {
         className="p-1 font-normal"
       >
         <a href="#" className="flex items-center">
-          Account
+          Patterns
         </a>
       </Typography>
       <Typography
@@ -90,7 +102,6 @@ export function NavBar() {
             </Link>
           </Typography>
           
-          {/* Search bar - always visible, positioned in the middle */}
           <div className="flex items-center flex-1 max-w-md mx-4">
             <div className="relative w-full">
               <Input
@@ -131,20 +142,40 @@ export function NavBar() {
           <div className="flex items-center gap-4">
             <div className="mr-4 hidden lg:block">{navList}</div>
             <div className="flex items-center gap-x-1">
-              <Button
-                variant="text"
-                size="sm"
-                className="hidden lg:inline-block"
-              >
-                <span>Log In</span>
-              </Button>
-              <Button
+            {session ? 
+              (<div className="flex items-center gap-x-1">
+                <Button
                 variant="gradient"
                 size="sm"
                 className="hidden lg:inline-block"
-              >
-                <span>Sign in</span>
-              </Button>
+                onClick={handleSignOut}
+                >
+                  <span>Sign Out</span>
+                </Button>
+              </div>) :
+              (
+                <div className="flex items-center gap-x-1">
+                  <Link to="signIn">
+                    <Button
+                      variant="text"
+                      size="sm"
+                      className="hidden lg:inline-block"
+                    >
+                      <span>Sign In</span>
+                    </Button>                  
+                  </Link>
+                  <Link to="signUp">
+                    <Button
+                      variant="gradient"
+                      size="sm"
+                      className="hidden lg:inline-block"
+                    >
+                      <span>Sign Up</span>
+                    </Button>
+                  </Link>                   
+                </div>
+              )
+            }
             </div>
             <IconButton
               variant="text"
@@ -187,14 +218,28 @@ export function NavBar() {
         </div>
         <Collapse open={openNav}>
           {navList}
-          <div className="flex items-center gap-x-1">
-            <Button fullWidth variant="text" size="sm" className="">
-              <span>Log In</span>
-            </Button>
-            <Button fullWidth variant="gradient" size="sm" className="">
-              <span>Sign in</span>
-            </Button>
-          </div>
+          {session ? (
+              <div className="flex flex-row  justify-center gap-x-1 max-w-full">
+                  <Button fullWidth variant="gradient" size="sm" className="" onClick={handleSignOut}>
+                    <span>Sign Out</span>
+                  </Button>            
+              </div>
+          ) : (
+            <div className="flex flex-row  justify-center gap-x-1 max-w-full">
+              <Link to="signIn">
+                <Button fullWidth variant="text" size="sm" className="">
+                  <span>Sign In</span>
+                </Button>            
+              </Link>
+
+              <Link to="signUp">
+                <Button fullWidth variant="gradient" size="sm" className="">
+                  <span>Sign Up</span>
+                </Button>            
+              </Link>
+            </div>
+          )}
+
         </Collapse>
       </Navbar>
     </div>
