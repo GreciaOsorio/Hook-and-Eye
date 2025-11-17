@@ -11,6 +11,8 @@ import {
     Button,
 } from "@material-tailwind/react";
 import { formatDistanceToNow, format } from 'date-fns';
+import { UserAuth } from "../context/AuthContext";
+import Comments from "../components/Comment";
 
 
 const PostDetails = () => {
@@ -28,6 +30,8 @@ const PostDetails = () => {
     const [isLiked, setIsLiked] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [showDeleteWarning, setShowDeleteWarning] = useState(false)
+    const { session } = UserAuth()
+    const user_id = session?.user?.id
 
     useEffect(() => {
         const fetchPost = async() => {
@@ -35,12 +39,13 @@ const PostDetails = () => {
                 .from ('Posts')
                 .select()
                 .eq('id', id)
-                .single()
+                .maybeSingle()
 
             console.log(data)
 
             setPost({
                 id: data.id,
+                user_id: data.user_id,
                 created_at: data.created_at,
                 title: data.title,
                 content: data.content,
@@ -51,7 +56,33 @@ const PostDetails = () => {
         }
 
         fetchPost().catch(console.error)
-    },[id])
+    },[id]);
+
+    // Check if user has already liked this post
+    useEffect(() => {
+        const checkIfLiked = async () => {
+            if (!user_id || !id) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('PostLikes')
+                    .select('id')
+                    .eq('user_id', user_id)
+                    .eq('post_id', id)
+                    .single();
+
+                if (data) {
+                    setIsLiked(true);
+                }
+            } catch (err) {
+                // No like found, which is fine
+                setIsLiked(false);
+            }
+        };
+
+        checkIfLiked();
+    }, [user_id, id]);
+
 
     useEffect(() => {
         setLikes(post.likes || 0);
@@ -60,7 +91,10 @@ const PostDetails = () => {
     const updateLike = async(event) => {
         event.preventDefault()
         
-        if (isUpdating) return;
+        if (isUpdating || !user_id) {
+            if (!user_id) alert('Please log in to like posts');
+            return;
+        }
 
         setIsUpdating(true);
         const newLikeStatus = !isLiked;
@@ -70,22 +104,45 @@ const PostDetails = () => {
         setLikes(newLikeCount);
 
         try {
-        const {error} = await supabase
-            .from('Posts')
-            .update({ likes: newLikeCount })
-            .eq('id', post.id)
+            if (newLikeStatus) {
+                // Add like
+                const { error: likeError } = await supabase
+                    .from('PostLikes')
+                    .insert([
+                        {
+                            user_id: user_id,
+                            post_id: post.id
+                        }
+                    ]);
 
-        if (error) {
-            console.error('Error updating likes:', error)
+                if (likeError) throw likeError;
+            } else {
+                // Remove like
+                const { error: unlikeError } = await supabase
+                    .from('PostLikes')
+                    .delete()
+                    .eq('user_id', user_id)
+                    .eq('post_id', post.id);
+
+                if (unlikeError) throw unlikeError;
+            }
+
+            // Update the like count in Posts table
+            const { error: updateError } = await supabase
+                .from('Posts')
+                .update({ likes: newLikeCount })
+                .eq('id', post.id);
+
+            if (updateError) throw updateError;
+
+        } catch (err) {
+            console.error('Error updating like:', err);
+            // Revert on error
             setIsLiked(!newLikeStatus);
             setLikes(likes);
-        }
-        } catch (err) {
-        console.error('Error:', err)
-        setIsLiked(!newLikeStatus);
-        setLikes(likes);
+            alert('Failed to update like');
         } finally {
-        setIsUpdating(false);
+            setIsUpdating(false);
         }
     };
 
@@ -225,9 +282,9 @@ const PostDetails = () => {
                     )}
                     
                 </CardBody>
-                <CardFooter className="pt-0 pb-1 pl-1">
+                <CardFooter className="pt-0 pb-1">
                     <Button variant="text" 
-                            className=" flex flex-row cursor-pointer items-center"
+                            className=" flex flex-row cursor-pointer items-center pl-1"
                             onClick={updateLike}
                             disabled={isUpdating}
                     >
@@ -242,6 +299,12 @@ const PostDetails = () => {
                     </svg>
                     {likes} Likes
                     </Button>
+                    <br></br>
+                    <div className="bg-gray-200 p-4 pt-2 rounded-md">
+                        <Comments 
+                            post_id={post.id}  
+                        />
+                    </div>
                 </CardFooter>
             </Card>
         </div>

@@ -8,12 +8,38 @@ import {
 import { useEffect, useState } from "react";
 import { supabase } from "../client";
 import { formatDistanceToNow, format } from 'date-fns';
- 
+import { UserAuth } from "../context/AuthContext";
+
 export function SimpleCard(props) {
+  const { session } = UserAuth();
+  const user_id = session?.user?.id
   const [likes, setLikes] = useState(props.likes);
   const [isLiked, setIsLiked] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
+
+  useEffect(() => {
+    const checkIfLiked = async() => {
+      if (!user_id || !props.id) return;
+
+      try{
+        const { data, error } = await supabase
+          .from('PostLikes')
+          .select("id")
+          .eq('user_id', user_id)
+          .eq('post_id', props.id)
+          .maybeSingle()
+
+          if (data) {
+            setIsLiked(true);
+          }
+      }catch(error){
+        setIsLiked(false);
+      }
+    };
+      
+    checkIfLiked()
+  }, [user_id, props.id]);
 
   useEffect(() => {
     setLikes(props.likes || 0);
@@ -22,7 +48,10 @@ export function SimpleCard(props) {
   const updateLike = async(event) => {
     event.preventDefault()
     
-    if (isUpdating) return;
+    if (isUpdating || !user_id) {
+      if(!user_id) alert('please log in to like posts.')
+      return;
+    }
 
     setIsUpdating(true);
     const newLikeStatus = !isLiked;
@@ -31,24 +60,44 @@ export function SimpleCard(props) {
     setIsLiked(newLikeStatus);
     setLikes(newLikeCount);
 
-    try {
+    try{
+      if(newLikeStatus){
+        const {error: likeError} = await supabase
+          .from('PostLikes')
+          .insert([
+            {
+              user_id: user_id,
+              post_id: props.id,
+            }
+          ]);
+        
+        if(likeError) throw likeError;
+      }else{
+        const {error: unlikeError} = await supabase
+          .from('PostLikes')
+          .delete()
+          .eq('user_id', user_id)
+          .eq('post_id', props.id)
+
+        if (unlikeError) throw unlikeError;
+      }
+
       const {error} = await supabase
         .from('Posts')
         .update({ likes: newLikeCount })
         .eq('id', props.id)
 
-      if (error) {
-        console.error('Error updating likes:', error)
-        setIsLiked(!newLikeStatus);
-        setLikes(likes);
-      }
-    } catch (err) {
-      console.error('Error:', err)
-      setIsLiked(!newLikeStatus);
+      if(error) throw error;
+
+    }catch(error){
+      console.error ('Error upddating likes: ', error)
+      setIsLiked(!newLikeStatus)
       setLikes(likes);
-    } finally {
+      alert("Failed to update like")
+    }finally{
       setIsUpdating(false);
     }
+
   };
 
 
