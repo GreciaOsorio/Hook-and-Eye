@@ -28,7 +28,7 @@ The following **required** functionality is completed:
     -  creation time
     -  upvotes count
   - Users can search for posts by title
-- [ ] **Users can interact with each post in different ways**
+- [x] **Users can interact with each post in different ways**
   - The app includes a separate post page for each created post when clicked, where any additional information is shown, including:
     - content
     - image
@@ -45,7 +45,7 @@ The following **required** functionality is completed:
 The following **optional** features are implemented:
 
 
-- [ ] Web app implements pseudo-authentication
+- [x] Web app implements pseudo-authentication
   - Users can only edit and delete posts or delete comments by entering the secret key, which is set by the user during post creation
   - **or** upon launching the web app, the user is assigned a random user ID. It will be associated with all posts and comments that they make and displayed on them
   - For both options, only the original user author of a post can update or delete it
