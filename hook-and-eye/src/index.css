@@ -8,3 +8,12 @@
   padding: 2rem;
   text-align: center;
 }
+
+@layer base{
+  :root{
+    font-family: "Darker Grotesque", sans-serif;
+  }
+  body{
+    font-family: "Darker Grotesque", sans-serif;
+  }
+}

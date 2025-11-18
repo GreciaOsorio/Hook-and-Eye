@@ -91,7 +91,7 @@ const Home = ({ searchQuery }) => {
   
     if(loading) {
         return(
-            <div className='flex items-center justify-center min-h-screen '>
+            <div className='flex items-center justify-center min-h-screen font-darkGrotesque '>
                 <div className='max-w-xs max-h-xs'>
                     <DotLottieReact
                         src="https://lottie.host/03b57b35-c7b9-4886-b262-b1ddc22f510a/qOjyaG6Fos.lottie"
@@ -105,12 +105,13 @@ const Home = ({ searchQuery }) => {
         return (
             <div className="whole-page p-4 pt-14 ">
                 <div className="">
-                    <div className="flex w-max items-end gap-4">
-                        <p className='text-md font-light text-gray-500 pl-2'>filter by:</p>
+                    <div className="flex w-max items-center gap-4 ">
+                        <p className='text-md font-semibold text-gray-500 pl-2 '>filter by:</p>
                         <Button 
                             size="sm" 
                             onClick={filterByCreationTime}
                             color={sortByLatest? "blue" : "gray"}
+                            className='text-sm'
                         >
                             {sortByLatest ? "latest ✓" : "latest"}
                         </Button>
@@ -118,6 +119,7 @@ const Home = ({ searchQuery }) => {
                             size="sm" 
                             onClick={filterByLikes}
                             color={sortByLikes? "blue" : "gray"}
+                            className='text-sm'
                         >
                             {sortByLikes ? "Most Liked ✓" : "Most Liked"}
                         </Button>
@@ -140,7 +142,7 @@ const Home = ({ searchQuery }) => {
                             ) :
                             (
                                 <div>
-                                    <h4>No posts have been made yet</h4>
+                                    <h3>No posts have been made yet</h3>
                                 </div>
                             )
 

@@ -90,7 +90,7 @@ export function SimpleCard(props) {
       if(error) throw error;
 
     }catch(error){
-      console.error ('Error upddating likes: ', error)
+      console.error ('Error updating likes: ', error)
       setIsLiked(!newLikeStatus)
       setLikes(likes);
       alert("Failed to update like")
@@ -102,21 +102,21 @@ export function SimpleCard(props) {
 
 
   return (
-    <Card className="flex text-left p-3 mt-6 mb-6 w-full">
-      <CardBody className="p-4">
-        <Typography variant="small" className="font-light mb-2 ">
+    <Card className="flex text-left p-3 mt-6 mb-6 w-full ">
+      <CardBody className="p-4 ">
+        <Typography className="font-semibold mb-2 ">
           Creator: {props.creator}
         </Typography>
-        <Typography variant="small" className="font-light mb-2 ">
+        <Typography className="font-semibold mb-2 ">
           Posted {formatDistanceToNow(new Date(props.created_at), { addSuffix: true })} • {format(new Date(props.created_at), 'MM/dd/yy')} at {format(new Date(props.created_at), 'HH:mm')}
         </Typography>
-        <Typography variant="h4" color="blue-gray" className="mb-2">
+        <Typography variant="h3" color="blue-gray" className="mb-2 ">
           {props.title}
         </Typography>
       </CardBody>
       <CardFooter className="pt-0 pb-1 pl-1">
         <Button variant="text" 
-                className=" flex flex-row cursor-pointer items-center"
+                className=" flex flex-row cursor-pointer text-left text-sm"
                 onClick={updateLike}
                 disabled={isUpdating}
         >
@@ -125,7 +125,7 @@ export function SimpleCard(props) {
               viewBox="0 0 24 24" 
               strokeWidth={1.5} 
               stroke={isLiked? "#f43f5e":"currentColor"} 
-              className="size-6 stroke-black-500 mr-1"
+              className="size-6 stroke-black-500 mr-1 "
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
           </svg>
