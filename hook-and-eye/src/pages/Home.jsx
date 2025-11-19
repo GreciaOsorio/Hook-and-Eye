@@ -103,23 +103,23 @@ const Home = ({ searchQuery }) => {
         )
     }else{
         return (
-            <div className="whole-page p-4 pt-14 ">
+            <div className="whole-page p-4 pt-14">
                 <div className="">
                     <div className="flex w-max items-center gap-4 ">
                         <p className='text-md font-semibold text-gray-500 pl-2 '>filter by:</p>
                         <Button 
                             size="sm" 
                             onClick={filterByCreationTime}
-                            color={sortByLatest? "blue" : "gray"}
-                            className='text-sm'
+                            color={sortByLatest? "blue" : ""}
+                            className='text-sm bg-primary'
                         >
                             {sortByLatest ? "latest ✓" : "latest"}
                         </Button>
                         <Button 
                             size="sm" 
                             onClick={filterByLikes}
-                            color={sortByLikes? "blue" : "gray"}
-                            className='text-sm'
+                            color={sortByLikes? "blue" : ""}
+                            className='text-sm bg-primary'
                         >
                             {sortByLikes ? "Most Liked ✓" : "Most Liked"}
                         </Button>

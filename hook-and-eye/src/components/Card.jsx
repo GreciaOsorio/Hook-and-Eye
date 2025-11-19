@@ -102,21 +102,21 @@ export function SimpleCard(props) {
 
 
   return (
-    <Card className="flex text-left p-3 mt-6 mb-6 w-full ">
+    <Card className="flex text-left p-3 mt-6 mb-6 w-full bg-primary ">
       <CardBody className="p-4 ">
-        <Typography className="font-semibold mb-2 ">
+        <Typography className="font-semibold mb-2 text-text">
           Creator: {props.creator}
         </Typography>
-        <Typography className="font-semibold mb-2 ">
+        <Typography className="font-semibold mb-2 text-text">
           Posted {formatDistanceToNow(new Date(props.created_at), { addSuffix: true })} • {format(new Date(props.created_at), 'MM/dd/yy')} at {format(new Date(props.created_at), 'HH:mm')}
         </Typography>
-        <Typography variant="h3" color="blue-gray" className="mb-2 ">
+        <Typography variant="h3"  className="mb-2 text-text">
           {props.title}
         </Typography>
       </CardBody>
       <CardFooter className="pt-0 pb-1 pl-1">
         <Button variant="text" 
-                className=" flex flex-row cursor-pointer text-left text-sm"
+                className=" flex flex-row cursor-pointer text-left text-sm text-text"
                 onClick={updateLike}
                 disabled={isUpdating}
         >

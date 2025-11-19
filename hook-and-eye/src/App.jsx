@@ -54,13 +54,14 @@ function App() {
   ])
 
   return (
-    <>
-      <div>
-        <NavBar  onSearch={setSearchQuery}/>
-        { element }
-
+    <div className="min-h-screen">
+      <NavBar  onSearch={setSearchQuery}/>
+      <div className="px-6">
+        { element }      
       </div>
-    </>
+  
+
+    </div>
   )
 }
 

@@ -5,8 +5,38 @@
 #root {
   max-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
+  background-color: var(--color-background);
+  min-height: 100vh;
+
+}
+
+[data-theme="light"] {
+  --color-primary: #5B86CB;
+  --color-secondary: #c2d703;
+  --color-accent: #ec4899;
+  --color-background: #D6DBF1;
+  --color-surface: #f3f4f6;
+  --color-text: #E0DBDF;
+}
+
+[data-theme="dark"] {
+  --color-primary: #60a5fa;
+  --color-secondary: #D24379;
+  --color-accent: #f472b6;
+  --color-background: #111827;
+  --color-surface: #1f2937;
+  --color-text: #f9fafb;
+}
+
+[data-theme="ocean"] {
+  --color-primary: #06b6d4;
+  --color-secondary: #0891b2;
+  --color-accent: #22d3ee;
+  --color-background: #083344;
+  --color-surface: #0e7490;
+  --color-text: #ecfeff;
 }
 
 @layer base{
@@ -16,4 +46,5 @@
   body{
     font-family: "Darker Grotesque", sans-serif;
   }
+
 }
