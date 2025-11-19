@@ -14,7 +14,9 @@ const Home = ({ searchQuery }) => {
     const [loading, setLoading] = useState(true);
     const [sortByLatest, setSortByLatest] = useState(false);
     const [sortByLikes, setSortByLikes] = useState(false);
+    const [sortByUser, setSortByUser] = useState(false);
     const [allPosts, setAllPosts] = useState([]);
+    const user_id = session?.user?.id
 
 
     console.log(session)
