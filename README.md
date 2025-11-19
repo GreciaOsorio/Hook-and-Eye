@@ -4,7 +4,7 @@ Submitted by: Grecia Osorio
 
 This web app: **insert description**
 
-Time spent: **31** hours spent in total
+Time spent: **41** hours spent in total
 
 ## Required Features
 
@@ -52,7 +52,7 @@ The following **optional** features are implemented:
 - [ ] Users can repost a previous post by referencing its post ID. On the post page of the new post
   - Users can repost a previous post by referencing its post ID
   - On the post page of the new post, the referenced post is displayed and linked, creating a thread
-- [ ] Users can customize the interface
+- [x] Users can customize the interface
   - e.g., selecting the color scheme or showing the content and image of each post on the home feed
 - [x] Users can add more characterics to their posts
   - Users can share and view web videos
@@ -67,20 +67,29 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories:
+Here's a walkthrough of all implemented features:
+  <div>
+    <a href="https://www.loom.com/share/154d861bde314bd0bcbedad3054eefa9">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/154d861bde314bd0bcbedad3054eefa9-1023f04ce09958c3-full-play.gif#t=0.1">
+    </a>
+  </div>
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-<!-- Replace this with whatever GIF tool you used! -->
 GIF created with ...  
-<!-- Recommended tools:
-[Kap](https://getkap.co/) for macOS
-[ScreenToGif](https://www.screentogif.com/) for Windows
-[peek](https://github.com/phw/peek) for Linux. -->
+[Loom](https://www.loom.com) Chrome extension.
+
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+In the process of making this website I encounter many complications and challenges. Most specifically what I wanted it to be, for who, and how. I created to be a community forum, which I wanted it to have a patterns section as well as a mentor algorithm. Needless to say, neither of those goals came to fruition, surprising to many but me. I coded for two days straight and still had only the bare bones, this is because I am poor planner. I went head first into the project without realizing the scope of the MVP goals, which were a lot but manageable.
+
+I ended with a satisfying product, which has left me wanting to revisit it as soon as possible. I am very proud of the theme switcher I created. It is a frankenstein's monster of soo many tutorials. I want to come back and add more theme options, even a "choose your own" option!.
+
+## Libraries
+
+1. ⏰ Date-fns - for time display cleanup
+2. 🎞️ @lottiefiles/dotlottie-react - for laoding animations
+3. 🎨 @material-tailwind/react - for pre-made components using Tailwind CSS
 
 ## License
 
