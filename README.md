@@ -74,6 +74,13 @@ Here's a walkthrough of all implemented features:
     </a>
   </div>
 
+Here are the following features not included in previous video: (Upload image from local device, edit own post, and delete own post)
+<div>
+    <a href="https://www.loom.com/share/81bffe8a7e5744b8824359142e77c252">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/81bffe8a7e5744b8824359142e77c252-141bd0e1d3b24145-full-play.gif#t=0.1">
+    </a>
+  </div>
+
 
 GIF created with ...  
 [Loom](https://www.loom.com) Chrome extension.
