@@ -2,7 +2,7 @@
 
 Submitted by: Grecia Osorio
 
-This web app: **insert description**
+This web app: A forum website where hobbyist, beginners and sewing veterans can share patterns, tips, chitchat, and even become mentors.
 
 Time spent: **41** hours spent in total
 
