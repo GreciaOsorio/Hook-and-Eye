@@ -18,9 +18,6 @@ const Home = ({ searchQuery }) => {
     const [allPosts, setAllPosts] = useState([]);
     const user_id = session?.user?.id
 
-
-    console.log(session)
-
     useEffect(() => {
         const fetchPost = async() => {
             setLoading(true);
